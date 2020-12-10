@@ -25,4 +25,5 @@ setuptools.setup(
             "realpython=podcastindex.__main__:main",
         ]
     },
+    python_requires='>=3.6',
 )
