@@ -9,5 +9,6 @@ twine
 wheel
 
 # For test
+codecov
 coverage
 pytest
