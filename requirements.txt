@@ -1,0 +1,13 @@
+black
+flake8
+requests
+
+# For development
+ipython
+setuptools
+twine
+wheel
+
+# For test
+coverage
+pytest
