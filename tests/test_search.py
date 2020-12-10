@@ -12,14 +12,16 @@ def test_search_found():
 
     query_str = "This American Life"
     results = index.search(query_str)
+    found = False
 
     for feed in results["feeds"]:
         title = feed["title"]
         if query_str == title:
-            # Found a matching feed. Test passes!
-            return
+            # Found a matching feed
+            found = True
+            break
 
-    assert False, "Count not find podcast that should be in the feed: {}".format(query_str)
+    assert found, "Count not find podcast that should be in the feed: {}".format(query_str)
 
 
 def test_search_clean():

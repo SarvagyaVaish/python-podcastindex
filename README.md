@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/SarvagyaVaish/python-podcastindex.svg?branch=main)](https://travis-ci.com/SarvagyaVaish/python-podcastindex)
+[![codecov](https://codecov.io/gh/SarvagyaVaish/python-podcastindex/branch/main/graph/badge.svg?token=H154DI9JUR)](https://codecov.io/gh/SarvagyaVaish/python-podcastindex)
+
 # python-podcastindex
 
 A python wrapper for the Podcast Index API (podcastindex.org)

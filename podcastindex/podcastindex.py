@@ -114,21 +114,3 @@ class PodcastIndex:
         # Parse the result as a dict
         result_dict = json.loads(result.text)
         return result_dict
-
-    def _extract_error(self, result):
-        """
-        TODO: Flush this out
-        """
-        # Check status code, if it's not 200, raise exception
-        if result.status_code != 200:
-            error_msg = "Status code {}.".format(result.status_code)
-            try:
-                # Try to read the description from the response.
-                result_dict = json.loads(result.text)
-                error_msg += " {}".format(result_dict["description"])
-            except Exception:
-                # Can't get the description from the response. Use the text as is.
-                logger.error(result.text)
-                error_msg += " Response:\n{}".format(result.text)
-
-            raise RuntimeError(error_msg)
