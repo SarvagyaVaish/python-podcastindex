@@ -1,0 +1,9 @@
+[run]
+omit =
+    # omit anything in a .venv directory anywhere
+    */.venv/*
+    # omit anything in a test or tests directory anywhere
+    */test/*
+    */tests/*
+source =
+    podcastindex
