@@ -1,8 +1,8 @@
-black
-flake8
 requests
 
 # For development
+black;python_version>='3.6'
+flake8;python_version>='3.6'
 ipython
 setuptools
 twine
