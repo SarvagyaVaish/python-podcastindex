@@ -250,7 +250,7 @@ class PodcastIndex:
         Args:
             itunesId (string or integer): Itunes ID for the feed.
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
-                             now. The search will start from that time and only return feeds updated since then.
+                now. The search will start from that time and only return feeds updated since then.
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -287,6 +287,39 @@ class PodcastIndex:
 
         # Setup payload
         payload = {"id": id}
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
+    def recentEpisodes(self, max=None, excluding=None, before_episode_id=None):
+        """
+        Returns the most recent [max] number of episodes globally across the whole index, in reverse chronological
+        order.
+
+        Args:
+            max (int, optional): Maximum number of results to return.
+            excluding ([type], optional): Any item containing this string in the title or url will be discarded from
+                the result set.
+            before_episode_id (int, optional): Get recent episodes before this episode id, allowing you to walk back
+                through the episode history sequentially.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/recent/episodes"
+
+        # Setup payload
+        payload = {}
+        if max:
+            payload["max"] = max
+        if excluding:
+            payload["excludeString"] = excluding
+        if before_episode_id:
+            payload["before"] = before_episode_id
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
