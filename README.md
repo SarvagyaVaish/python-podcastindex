@@ -7,7 +7,9 @@ A python wrapper for the Podcast Index API (podcastindex.org)
 
 ## Installation
 
-(coming soon)
+```
+pip install python-podcastindex
+```
 
 ## Usage
 
@@ -285,4 +287,14 @@ results = index.recentEpisodes(max=5, excluding="trump", before_episode_id=12701
 
 ## Contributing
 
-(coming soon)
+- Fork the repo
+- Add your awesome code
+- Submit a pull request
+- Ensure all existing tests pass
+- Bonus: include tests for your awesome new feature
+
+## Support
+
+I am passionate about podcasting and work on this in my spare time. Hit me up and we can grab a virtual coffee together.
+
+<a href="https://www.buymeacoffee.com/survyv" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
