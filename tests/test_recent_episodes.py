@@ -11,11 +11,22 @@ feedId = 522613
 itunesId = 201671138
 
 
+def _log_results(context, results):
+    logger.info("Episode results from {}".format(context))
+    for episode in results["items"]:
+        logger.info(
+            "Episode Id: {} \t Date: {}, {} \t ".format(
+                episode["id"], episode["datePublished"], episode["datePublishedPretty"]
+            )
+        )
+
+
 def test_recent_episodes():
     config = podcastindex.get_config_from_env()
     index = podcastindex.init(config)
 
     results = index.recentEpisodes(max=10)
+    _log_results("test_recent_episodes", results)
 
     # Last episode should be within the last day
     last_episode_timestamp = results["items"][0]["datePublished"]
@@ -43,10 +54,12 @@ def test_recent_episodes_before_id():
     index = podcastindex.init(config)
 
     results = index.recentEpisodes(max=10)
+    _log_results("test_recent_episodes_before_id", results)
     prev_oldest_id = results["items"][-1]["id"]
     prev_oldest_timestamp = results["items"][-1]["datePublished"]
 
     results = index.recentEpisodes(max=1, before_episode_id=prev_oldest_id)
+    _log_results("test_recent_episodes_before_id", results)
     for episode in results["items"]:
         episode_timestamp = episode["datePublished"]
         assert episode_timestamp >= prev_oldest_timestamp, "Using before episode id, we should get older results"
