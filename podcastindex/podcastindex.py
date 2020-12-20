@@ -176,7 +176,7 @@ class PodcastIndex:
         Lookup a podcast by itunesId.
 
         Args:
-            itunesId (string or integer): Ituned ID for the feed.
+            itunesId (string or integer): Itunes ID for the feed.
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -190,6 +190,130 @@ class PodcastIndex:
 
         # Setup payload
         payload = {"id": itunesId}
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
+    def episodesByFeedUrl(self, feedUrl, since=None):
+        """
+        Lookup episodes by feedUrl, returned in reverse chronological order.
+
+        Args:
+            feedUrl (string or integer): The feed's url.
+            since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
+                             now. The search will start from that time and only return feeds updated since then.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/episodes/byfeedurl"
+
+        # Setup payload
+        payload = {"url": feedUrl}
+        if since:
+            payload["since"] = since
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
+    def episodesByFeedId(self, feedId, since=None):
+        """
+        Lookup episodes by feedId, returned in reverse chronological order.
+
+        Args:
+            feedId (string or integer): Podcast index internal ID.
+            since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
+                             now. The search will start from that time and only return feeds updated since then.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/episodes/byfeedid"
+
+        # Setup payload
+        payload = {"id": feedId}
+        if since:
+            payload["since"] = since
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
+    def episodesByItunesId(self, itunesId, since=None):
+        """
+        Lookup episodes by itunesId, returned in reverse chronological order.
+
+        Args:
+            itunesId (string or integer): Itunes ID for the feed.
+            since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
+                             now. The search will start from that time and only return feeds updated since then.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/episodes/byitunesid"
+
+        # Setup payload
+        payload = {"id": itunesId}
+        if since:
+            payload["since"] = since
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
+    def episodeById(self, id):
+        """
+        Lookup episode by id internal to podcast index.
+
+        Args:
+            id (string or integer): Episode ID.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/episodes/byid"
+
+        # Setup payload
+        payload = {"id": id}
 
         # Perform request
         result = requests.post(url, headers=headers, data=payload)
