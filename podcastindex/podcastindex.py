@@ -84,6 +84,22 @@ class PodcastIndex:
 
         return headers
 
+    def _make_request_get_result_helper(self, url, payload):
+        """
+        Helper method DRY up the code. It performs the request and returns the result.
+
+        Returns:
+            [type]: [description]
+        """
+        # Perform request
+        headers = self._create_headers()
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
     def search(self, query, clean=False):
         """
         Returns all of the feeds that match the search terms in the title, author or owner of the feed.
@@ -99,7 +115,6 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/search/byterm"
 
         # Setup payload
@@ -107,13 +122,8 @@ class PodcastIndex:
         if clean:
             payload["clean"] = 1
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def podcastByFeedUrl(self, feedUrl):
         """
@@ -129,19 +139,13 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/podcasts/byfeedurl"
 
         # Setup payload
         payload = {"url": feedUrl}
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def podcastByFeedId(self, feedId):
         """
@@ -157,19 +161,13 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/podcasts/byfeedid"
 
         # Setup payload
         payload = {"id": feedId}
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def podcastByItunesId(self, itunesId):
         """
@@ -185,19 +183,13 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/podcasts/byitunesid"
 
         # Setup payload
         payload = {"id": itunesId}
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def episodesByFeedUrl(self, feedUrl, since=None):
         """
@@ -215,7 +207,6 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/episodes/byfeedurl"
 
         # Setup payload
@@ -223,13 +214,8 @@ class PodcastIndex:
         if since:
             payload["since"] = since
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def episodesByFeedId(self, feedId, since=None):
         """
@@ -247,7 +233,6 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/episodes/byfeedid"
 
         # Setup payload
@@ -255,13 +240,8 @@ class PodcastIndex:
         if since:
             payload["since"] = since
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def episodesByItunesId(self, itunesId, since=None):
         """
@@ -279,7 +259,6 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/episodes/byitunesid"
 
         # Setup payload
@@ -287,13 +266,8 @@ class PodcastIndex:
         if since:
             payload["since"] = since
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
 
     def episodeById(self, id):
         """
@@ -309,16 +283,10 @@ class PodcastIndex:
             Dict: API response
         """
         # Setup request
-        headers = self._create_headers()
         url = self.base_url + "/episodes/byid"
 
         # Setup payload
         payload = {"id": id}
 
-        # Perform request
-        result = requests.post(url, headers=headers, data=payload)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
-        return result_dict
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
