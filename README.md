@@ -11,6 +11,15 @@ A python wrapper for the Podcast Index API (podcastindex.org)
 
 ## Usage
 
+1. [ Init the podcast index ](#init)
+1. [ Search ](#search)
+1. [ Podcasts ](#podcasts)
+1. [ Episodes of a podcast ](#episode_of_a_podcast)
+1. [ Episode by ID ](#episodes_by_id)
+1. [ Recent episodes ](#recent_episodes)
+
+
+<a name="init"></a>
 ### Init the podcast index
 ```python
 import podcastindex
@@ -23,6 +32,7 @@ config = {
 index = podcast_index.init(config)
 ```
 
+<a name="search"></a>
 ### Search
 
 ```python
@@ -80,6 +90,7 @@ result = index.search("This American Life", clean=True)
   ```
 </details>
 
+<a name="podcasts"></a>
 ### Podcasts
 
 ```python
@@ -128,6 +139,7 @@ results = index.podcastByItunesId(201671138)
   ```
 </details>
 
+<a name="episode_of_a_podcast"></a>
 ### Episodes of a podcast
 
 ```python
@@ -180,6 +192,7 @@ results = index.episodesByFeedId(522613, since=1577836800)  # Jan 1st 2020
   ```
 </details>
 
+<a name="episodes_by_id"></a>
 ### Episode by ID
 
 ```python
@@ -224,6 +237,7 @@ results = index.episodeById(1270106072)
   ```
 </details>
 
+<a name="recent_episodes"></a>
 ### Recent episodes
 
 ```python
