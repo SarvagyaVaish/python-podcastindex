@@ -114,3 +114,87 @@ class PodcastIndex:
         # Parse the result as a dict
         result_dict = json.loads(result.text)
         return result_dict
+
+    def podcastByFeedUrl(self, feedUrl):
+        """
+        Lookup a podcast by feedUrl.
+
+        Args:
+            feedUrl (string): The feed's url.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/podcasts/byfeedurl"
+
+        # Setup payload
+        payload = {"url": feedUrl}
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
+    def podcastByFeedId(self, feedId):
+        """
+        Lookup a podcast by feedId.
+
+        Args:
+            feedId (string or integer): Podcast index internal ID.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/podcasts/byfeedid"
+
+        # Setup payload
+        payload = {"id": feedId}
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
+
+    def podcastByItunesId(self, itunesId):
+        """
+        Lookup a podcast by itunesId.
+
+        Args:
+            itunesId (string or integer): Ituned ID for the feed.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        headers = self._create_headers()
+        url = self.base_url + "/podcasts/byitunesid"
+
+        # Setup payload
+        payload = {"id": itunesId}
+
+        # Perform request
+        result = requests.post(url, headers=headers, data=payload)
+        result.raise_for_status()
+
+        # Parse the result as a dict
+        result_dict = json.loads(result.text)
+        return result_dict
