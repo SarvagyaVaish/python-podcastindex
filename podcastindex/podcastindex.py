@@ -191,7 +191,7 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodesByFeedUrl(self, feedUrl, since=None):
+    def episodesByFeedUrl(self, feedUrl, since=None, max_results=10):
         """
         Lookup episodes by feedUrl, returned in reverse chronological order.
 
@@ -199,6 +199,7 @@ class PodcastIndex:
             feedUrl (string or integer): The feed's url.
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
                              now. The search will start from that time and only return feeds updated since then.
+            max_results (integer): Maximum number of results to return. Default: 10
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -210,14 +211,14 @@ class PodcastIndex:
         url = self.base_url + "/episodes/byfeedurl"
 
         # Setup payload
-        payload = {"url": feedUrl}
+        payload = {"url": feedUrl, "max": max_results}
         if since:
             payload["since"] = since
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodesByFeedId(self, feedId, since=None):
+    def episodesByFeedId(self, feedId, since=None, max_results=10):
         """
         Lookup episodes by feedId, returned in reverse chronological order.
 
@@ -225,6 +226,7 @@ class PodcastIndex:
             feedId (string or integer): Podcast index internal ID.
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
                              now. The search will start from that time and only return feeds updated since then.
+            max_results (integer): Maximum number of results to return. Default: 10
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -236,14 +238,14 @@ class PodcastIndex:
         url = self.base_url + "/episodes/byfeedid"
 
         # Setup payload
-        payload = {"id": feedId}
+        payload = {"id": feedId, "max": max_results}
         if since:
             payload["since"] = since
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodesByItunesId(self, itunesId, since=None):
+    def episodesByItunesId(self, itunesId, since=None, max_results=10):
         """
         Lookup episodes by itunesId, returned in reverse chronological order.
 
@@ -251,6 +253,7 @@ class PodcastIndex:
             itunesId (string or integer): Itunes ID for the feed.
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
                 now. The search will start from that time and only return feeds updated since then.
+            max_results (integer): Maximum number of results to return. Default: 10
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -262,7 +265,7 @@ class PodcastIndex:
         url = self.base_url + "/episodes/byitunesid"
 
         # Setup payload
-        payload = {"id": itunesId}
+        payload = {"id": itunesId, "max": max_results}
         if since:
             payload["since"] = since
 
@@ -320,6 +323,31 @@ class PodcastIndex:
             payload["excludeString"] = excluding
         if before_episode_id:
             payload["before"] = before_episode_id
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
+    def addByItunesId(self, itunesId):
+        """
+        Request a podcast be added to the index based on itunesId.
+
+        Args:
+            itunesId (string or integer): Itunes ID for the feed.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/add/byitunesid"
+
+        # Setup payload
+        payload = {
+            "id": itunesId,
+            "pretty": 1,
+        }
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
