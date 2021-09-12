@@ -265,7 +265,11 @@ class PodcastIndex:
         url = self.base_url + "/episodes/byitunesid"
 
         # Setup payload
-        payload = {"id": itunesId, "max": max_results}
+        payload = {
+            "id": itunesId,
+            "max": max_results,
+            "fulltext": True,
+        }
         if since:
             payload["since"] = since
 
