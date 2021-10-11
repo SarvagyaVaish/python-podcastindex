@@ -285,6 +285,21 @@ results = index.recentEpisodes(max=5, excluding="trump", before_episode_id=12701
   ```
 </details>
 
+## Running the tests
+
+- Export the api key and secret
+
+```
+export PODCAST_INDEX_API_KEY="7B3U8VVP87QWSZUFXJRE"
+export PODCAST_INDEX_API_SECRET="4QwK83LA7RttCDdms9MnCn3HMYqGPG6CDEvnkL2w"
+```
+
+- Run the tests
+
+```
+coverage run -m pytest --log-cli-level=INFO
+```
+
 ## Contributing
 
 - Fork the repo
@@ -292,6 +307,25 @@ results = index.recentEpisodes(max=5, excluding="trump", before_episode_id=12701
 - Submit a pull request
 - Ensure all existing tests pass
 - Bonus: include tests for your awesome new feature
+
+## Updating the pip package
+
+This is mostly for myself since I have to lookup these commands every time ;)
+
+1. Update version number in setup.py
+2. Run the following commands
+```
+rm -rf build
+rm -rf dist
+python3 -m pip install --upgrade build
+python3 -m build
+```
+3. Check that there is a .tar.gz and .whl file in the dist folder
+4. Upload the new version
+```
+python3 -m pip install --upgrade twine
+twine upload dist/*
+```
 
 ## Support
 
