@@ -52,6 +52,9 @@ class PodcastIndex:
         assert "api_key" in config
         assert "api_secret" in config
 
+        # Timeout used when making requests
+        self.timeout = 5
+
         self.api_key = config["api_key"]
         self.api_secret = config["api_secret"]
 
@@ -93,7 +96,7 @@ class PodcastIndex:
         """
         # Perform request
         headers = self._create_headers()
-        result = requests.post(url, headers=headers, data=payload)
+        result = requests.post(url, headers=headers, data=payload, timeout=self.timeout)
         result.raise_for_status()
 
         # Parse the result as a dict
@@ -110,6 +113,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -134,6 +138,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -156,6 +161,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -178,6 +184,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -203,6 +210,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -230,6 +238,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -257,6 +266,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -285,6 +295,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -312,6 +323,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response
@@ -340,6 +352,7 @@ class PodcastIndex:
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
 
         Returns:
             Dict: API response

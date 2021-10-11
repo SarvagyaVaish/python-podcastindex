@@ -1,6 +1,8 @@
 import logging
 
 import podcastindex
+import pytest
+import requests
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -8,6 +10,7 @@ logger = logging.getLogger()
 feedUrl = "http://feed.thisamericanlife.org/talpodcast"
 feedId = 522613
 itunesId = 201671138
+badItunesId = "abcdefg1234"
 
 
 def test_episode_lookup_by_feedid():
@@ -56,6 +59,14 @@ def test_episode_lookup_by_itunesid():
     assert (
         results["items"][0]["feedItunesId"] == itunesId
     ), "Episodes found do not belong to the Itunes ID used in the query"
+
+
+def test_erroneous_episode_lookup_by_itunesid():
+    config = podcastindex.get_config_from_env()
+    index = podcastindex.init(config)
+
+    with pytest.raises(requests.exceptions.ReadTimeout):
+        index.episodesByItunesId(badItunesId)
 
 
 def test_episode_lookup_by_id():
