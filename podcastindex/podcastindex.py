@@ -368,3 +368,29 @@ class PodcastIndex:
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
+
+    def pubNotifyUpdate(self, id):
+        """
+        Request a podcast be updated.
+
+        Args:
+            id (string or integer): ID of the podcast to update.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/hub/pubnotify"
+
+        # Setup payload
+        payload = {
+            "id": id,
+            "pretty": 1,
+        }
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
