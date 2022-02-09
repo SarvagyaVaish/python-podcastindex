@@ -96,7 +96,8 @@ class PodcastIndex:
         """
         # Perform request
         headers = self._create_headers()
-        result = requests.post(url, headers=headers, data=payload, timeout=self.timeout)
+        result = requests.post(url, headers=headers,
+                               data=payload, timeout=self.timeout)
         result.raise_for_status()
 
         # Parse the result as a dict
@@ -339,6 +340,39 @@ class PodcastIndex:
             payload["excludeString"] = excluding
         if before_episode_id:
             payload["before"] = before_episode_id
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
+    def trendingPodcasts(self, max=10, since=None, lang=None, categories=None, not_categories=None):
+        """
+        Returns the podcasts in the index that are trending.
+
+        Args:
+            max (int): Maximum number of results to return. Default: 10
+            since (int): Return items since the specified time. Can be a unix epoch timestamp or a negative integer
+                that represents a number of seconds prior to right now
+            lang ([string], optional): Specifying a language code will return podcasts only in that language.
+            categories ([string or int], optional): A list of categories used to limit which podcasts will be included
+                in results. Category names and IDs are both supported.
+            not_categories ([string or int], optional): A list of categories used to limit exclude certain podcasts
+                from results. Category names and IDs are both supported.
+        """
+        # Setup request
+        url = self.base_url + "/podcasts/trending"
+
+        # Setup payload
+        payload = {}
+        if max:
+            payload["max"] = max
+        if since:
+            payload["since"] = since
+        if lang:
+            payload["lang"] = ",".join(str(i) for i in lang)
+        if categories:
+            payload["cat"] = ",".join(str(i) for i in categories)
+        if not_categories:
+            payload["notcat"] = ",".join(str(i) for i in not_categories)
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
