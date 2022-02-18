@@ -104,13 +104,15 @@ class PodcastIndex:
         result_dict = json.loads(result.text)
         return result_dict
 
-    def search(self, query, clean=False):
+    def search(self, query, clean=False, fulltext=False):
         """
         Returns all of the feeds that match the search terms in the title, author or owner of the feed.
 
         Args:
             query (str): Query string
             clean (bool): Return only non-explicit feeds
+            fulltext (bool): Whether to return the full text value of any text fields. If false, field values
+                will be truncated to 100 words. Default: False
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -126,6 +128,8 @@ class PodcastIndex:
         payload = {"q": query}
         if clean:
             payload["clean"] = 1
+        if fulltext:
+            payload["fulltext"] = True
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
@@ -199,7 +203,7 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodesByFeedUrl(self, feedUrl, since=None, max_results=10):
+    def episodesByFeedUrl(self, feedUrl, since=None, max_results=10, fulltext=False):
         """
         Lookup episodes by feedUrl, returned in reverse chronological order.
 
@@ -208,6 +212,8 @@ class PodcastIndex:
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
                              now. The search will start from that time and only return feeds updated since then.
             max_results (integer): Maximum number of results to return. Default: 10
+            fulltext (boolean): Whether to return the full text value of any text fields. If false, field values
+                                will be truncated to 100 words. Default: False
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -223,11 +229,13 @@ class PodcastIndex:
         payload = {"url": feedUrl, "max": max_results}
         if since:
             payload["since"] = since
+        if fulltext:
+            payload["fulltext"] = True
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodesByFeedId(self, feedId, since=None, max_results=10):
+    def episodesByFeedId(self, feedId, since=None, max_results=10, fulltext=False):
         """
         Lookup episodes by feedId, returned in reverse chronological order.
 
@@ -236,6 +244,8 @@ class PodcastIndex:
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
                              now. The search will start from that time and only return feeds updated since then.
             max_results (integer): Maximum number of results to return. Default: 10
+            fulltext (boolean): Whether to return the full text value of any text fields. If false, field values
+                                will be truncated to 100 words. Default: False
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -251,11 +261,13 @@ class PodcastIndex:
         payload = {"id": feedId, "max": max_results}
         if since:
             payload["since"] = since
+        if fulltext:
+            payload["fulltext"] = True
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodesByItunesId(self, itunesId, since=None, max_results=10):
+    def episodesByItunesId(self, itunesId, since=None, max_results=10, fulltext=False):
         """
         Lookup episodes by itunesId, returned in reverse chronological order.
 
@@ -264,6 +276,8 @@ class PodcastIndex:
             since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
                 now. The search will start from that time and only return feeds updated since then.
             max_results (integer): Maximum number of results to return. Default: 10
+            fulltext (boolean): Whether to return the full text value of any text fields. If false, field values
+                will be truncated to 100 words. Default: False
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -279,20 +293,23 @@ class PodcastIndex:
         payload = {
             "id": itunesId,
             "max": max_results,
-            "fulltext": True,
         }
         if since:
             payload["since"] = since
+        if fulltext:
+            payload["fulltext"] = True
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def episodeById(self, id):
+    def episodeById(self, id, fulltext=False):
         """
         Lookup episode by id internal to podcast index.
 
         Args:
             id (string or integer): Episode ID.
+            fulltext (boolean): Whether to return the full text value of any text fields. If false, field values
+                will be truncated to 100 words. Default: False
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -306,11 +323,13 @@ class PodcastIndex:
 
         # Setup payload
         payload = {"id": id}
+        if fulltext:
+            payload["fulltext"] = True
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def recentEpisodes(self, max=None, excluding=None, before_episode_id=None):
+    def recentEpisodes(self, max=None, excluding=None, before_episode_id=None, fulltext=False):
         """
         Returns the most recent [max] number of episodes globally across the whole index, in reverse chronological
         order.
@@ -321,6 +340,8 @@ class PodcastIndex:
                 the result set.
             before_episode_id (int, optional): Get recent episodes before this episode id, allowing you to walk back
                 through the episode history sequentially.
+            fulltext (boolean): Whether to return the full text value of any text fields. If false, field values
+                will be truncated to 100 words. Default: False
 
         Raises:
             requests.exceptions.HTTPError: When the status code is not OK.
@@ -340,6 +361,8 @@ class PodcastIndex:
             payload["excludeString"] = excluding
         if before_episode_id:
             payload["before"] = before_episode_id
+        if fulltext:
+            payload["fulltext"] = True
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
