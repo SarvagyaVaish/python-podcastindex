@@ -309,7 +309,33 @@ class PodcastIndex:
 
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
+    
+    def episodesByPerson(self, query, clean=False):
+        """
+        Returns all of the episodes where the specified person is mentioned.
 
+        Args:
+            query (str): Query string
+            clean (bool): Return only non-explicit feeds
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/search/byperson"
+
+        # Setup payload
+        payload = {"q": query}
+        if clean:
+            payload["clean"] = 1
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+    
     def recentEpisodes(self, max=None, excluding=None, before_episode_id=None):
         """
         Returns the most recent [max] number of episodes globally across the whole index, in reverse chronological
