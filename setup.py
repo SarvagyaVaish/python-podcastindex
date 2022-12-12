@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="python-podcastindex",
-    version="1.8.0",
+    version="1.9.0",
     description="A python wrapper for the Podcast Index API (podcastindex.org).",
     long_description=README,
     long_description_content_type="text/markdown",
