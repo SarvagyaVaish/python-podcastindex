@@ -28,7 +28,7 @@ config = {
     "api_secret": "YOUR API SECRET HERE"
 }
 
-index = podcast_index.init(config)
+index = podcastindex.init(config)
 ```
 
 <a name="search"></a>
