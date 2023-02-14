@@ -16,14 +16,20 @@ jobs:
       - name: Install pypa/build
         run: python -m pip install build --user
 
+      - name: List directories 1
+        run: ls ${{ github.workspace }}
+
       - name: Build a binary wheel and a source tarball
         run: python -m pip install build --user
+
+      - name: List directories 2
+        run: ls ${{ github.workspace }}
 
       - name: Publish 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@v1.6.4
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/project/python-podcastindex/
+          repository_url: https://test.pypi.org/legacy/
 
       # - name: Publish 📦 to PyPI
       #   uses: pypa/gh-action-pypi-publish@v1.6.4
