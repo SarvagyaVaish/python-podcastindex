@@ -1,5 +1,10 @@
 name: Publish Package to PyPI
-on: [push]
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
