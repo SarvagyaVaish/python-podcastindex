@@ -401,7 +401,88 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def trendingPodcasts(self, max=10, since=None, lang=None, categories=None, not_categories=None):
+    def recentFeeds(
+        self, max=40, since=None, lang=None, categories=None, not_categories=None
+    ):
+        """
+        Returns the most recent [max] feeds, in reverse chronological order.
+
+        Args:
+            max (int, optional): Maximum number of results to return. Default: 40
+            since (int): Return items since the specified time. Can be a unix epoch timestamp or a negative integer
+                that represents a number of seconds prior to right now
+            lang ([string], optional): Specifying a language code will return podcasts only in that language.
+            categories ([string or int], optional): A list of categories used to limit which podcasts will be included
+                in results. Category names and IDs are both supported.
+            not_categories ([string or int], optional): A list of categories used to limit exclude certain podcasts
+                from results. Category names and IDs are both supported.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/recent/feeds"
+
+        # Setup payload
+        payload = {}
+        if max:
+            payload["max"] = max
+        if since:
+            payload["since"] = since
+        if lang:
+            payload["lang"] = ",".join(str(i) for i in lang)
+        if categories:
+            payload["cat"] = ",".join(str(i) for i in categories)
+        if not_categories:
+            payload["notcat"] = ",".join(str(i) for i in not_categories)
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
+    def newFeeds(self, max=40, since=None, feed_id=None, desc=None):
+        """
+        Returns every new feed added to the index over the past 24 hours in reverse chronological order.
+
+        Args:
+            max (int, optional): Maximum number of results to return. Default: 40
+            since (int): Return items since the specified time. Can be a unix epoch timestamp or a negative integer
+                that represents a number of seconds prior to right now
+            feed_id (string or int): The PodcastIndex Feed ID to start from (or go to if desc specified).
+                If since parameter also specified, value of since is ignored.
+            desc (bool): If true, return results in descending order. Only applicable when using feedid parameter.
+                Default: False
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/recent/feeds"
+
+        # Setup payload
+        payload = {}
+        if max:
+            payload["max"] = max
+        if since:
+            payload["since"] = since
+        if feed_id:
+            payload["feedid"] = feed_id
+        if desc:
+            payload["desc"] = desc
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
+    def trendingPodcasts(
+        self, max=10, since=None, lang=None, categories=None, not_categories=None
+    ):
         """
         Returns the podcasts in the index that are trending.
 
