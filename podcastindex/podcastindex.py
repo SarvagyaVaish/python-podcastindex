@@ -3,8 +3,8 @@ import json
 import logging
 import os
 import time
-
-import requests
+import aiohttp
+import asyncio
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -25,7 +25,7 @@ def init(config):
 
 def get_config_from_env():
     """
-    Retrieve the api key and secret from the envoronment.
+    Retrieve the api key and secret from the environment.
 
     Raises:
         RuntimeError: If the key or secret is not found in the environment.
@@ -52,15 +52,12 @@ class PodcastIndex:
         assert "api_key" in config
         assert "api_secret" in config
 
-        # Timeout used when making requests
-        self.timeout = 5
-
         self.api_key = config["api_key"]
         self.api_secret = config["api_secret"]
 
         self.base_url = "https://api.podcastindex.org/api/1.0"
 
-    def _create_headers(self):
+    async def _create_headers(self):
         """
         Hash the current timestamp along with the api key and secret to
         produce the headers for calling the api.
@@ -87,7 +84,7 @@ class PodcastIndex:
 
         return headers
 
-    def _make_request_get_result_helper(self, url, payload):
+    async def _make_request_get_result_helper(self, url, payload):
         """
         Helper method DRY up the code. It performs the request and returns the result.
 
@@ -95,16 +92,14 @@ class PodcastIndex:
             [type]: [description]
         """
         # Perform request
-        headers = self._create_headers()
-        result = requests.post(url, headers=headers,
-                               data=payload, timeout=self.timeout)
-        result.raise_for_status()
-
-        # Parse the result as a dict
-        result_dict = json.loads(result.text)
+        headers = await self._create_headers()
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=headers, data=payload) as response:
+                response.raise_for_status()
+                result_dict = await response.json()
         return result_dict
 
-    def search(self, query, clean=False):
+    async def search(self, query, clean=False):
         """
         Returns all of the feeds that match the search terms in the title, author or owner of the feed.
 
@@ -113,8 +108,7 @@ class PodcastIndex:
             clean (bool): Return only non-explicit feeds
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -128,9 +122,9 @@ class PodcastIndex:
             payload["clean"] = 1
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def podcastByFeedUrl(self, feedUrl):
+    async def podcastByFeedUrl(self, feedUrl):
         """
         Lookup a podcast by feedUrl.
 
@@ -138,8 +132,7 @@ class PodcastIndex:
             feedUrl (string): The feed's url.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -151,9 +144,9 @@ class PodcastIndex:
         payload = {"url": feedUrl}
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def podcastByFeedId(self, feedId):
+    async def podcastByFeedId(self, feedId):
         """
         Lookup a podcast by feedId.
 
@@ -161,8 +154,7 @@ class PodcastIndex:
             feedId (string or integer): Podcast index internal ID.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -174,9 +166,9 @@ class PodcastIndex:
         payload = {"id": feedId}
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def podcastByItunesId(self, itunesId):
+    async def podcastByItunesId(self, itunesId):
         """
         Lookup a podcast by itunesId.
 
@@ -184,8 +176,7 @@ class PodcastIndex:
             itunesId (string or integer): Itunes ID for the feed.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -197,9 +188,9 @@ class PodcastIndex:
         payload = {"id": itunesId}
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def episodesByFeedUrl(self, feedUrl, since=None, max_results=10, fulltext=False):
+    async def episodesByFeedUrl(self, feedUrl, since=None, max_results=10, fulltext=False):
         """
         Lookup episodes by feedUrl, returned in reverse chronological order.
 
@@ -211,8 +202,7 @@ class PodcastIndex:
             fulltext (bool): Return full text in the text fields. Default: False
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -228,9 +218,9 @@ class PodcastIndex:
             payload["fulltext"] = True
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def episodesByFeedId(
+    async def episodesByFeedId(
         self, feedId, since=None, max_results=10, fulltext=False, enclosure=None
     ):
         """
@@ -245,8 +235,7 @@ class PodcastIndex:
             enclosure (string): The URL for the episode enclosure to get the information for.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -264,9 +253,9 @@ class PodcastIndex:
             payload["enclosure"] = enclosure
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def episodesByItunesId(
+    async def episodesByItunesId(
         self, itunesId, since=None, max_results=10, fulltext=False, enclosure=None
     ):
         """
@@ -280,10 +269,8 @@ class PodcastIndex:
             fulltext (bool): Return full text in the text fields. Default: False
             enclosure (string): The URL for the episode enclosure to get the information for.
 
-
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -305,9 +292,9 @@ class PodcastIndex:
             payload["enclosure"] = enclosure
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def episodeById(self, id, fulltext=False):
+    async def episodeById(self, id, fulltext=False):
         """
         Lookup episode by id internal to podcast index.
 
@@ -316,8 +303,7 @@ class PodcastIndex:
             fulltext (bool): Return full text in the text fields. Default: False
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -331,9 +317,9 @@ class PodcastIndex:
             payload["fulltext"] = True
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def episodesByPerson(self, query, clean=False, fulltext=False):
+    async def episodesByPerson(self, query, clean=False, fulltext=False):
         """
         Returns all of the episodes where the specified person is mentioned.
 
@@ -343,8 +329,7 @@ class PodcastIndex:
             fulltext (bool): Return full text in the text fields. Default: False
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -360,9 +345,9 @@ class PodcastIndex:
             payload["fulltext"] = True
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def recentEpisodes(
+    async def recentEpisodes(
         self, max=None, excluding=None, before_episode_id=None, fulltext=False
     ):
         """
@@ -378,8 +363,7 @@ class PodcastIndex:
             fulltext (bool): Return full text in the text fields. Default: False
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -399,9 +383,9 @@ class PodcastIndex:
             payload["fulltext"] = True
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def recentFeeds(
+    async def recentFeeds(
         self, max=40, since=None, lang=None, categories=None, not_categories=None
     ):
         """
@@ -418,8 +402,7 @@ class PodcastIndex:
                 from results. Category names and IDs are both supported.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -441,9 +424,9 @@ class PodcastIndex:
             payload["notcat"] = ",".join(str(i) for i in not_categories)
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def newFeeds(self, max=40, since=None, feed_id=None, desc=None):
+    async def newFeeds(self, max=40, since=None, feed_id=None, desc=None):
         """
         Returns every new feed added to the index over the past 24 hours in reverse chronological order.
 
@@ -452,13 +435,12 @@ class PodcastIndex:
             since (int): Return items since the specified time. Can be a unix epoch timestamp or a negative integer
                 that represents a number of seconds prior to right now
             feed_id (string or int): The PodcastIndex Feed ID to start from (or go to if desc specified).
-                If since parameter also specified, value of since is ignored.
+                If since parameter also specified, the value of since is ignored.
             desc (bool): If true, return results in descending order. Only applicable when using feedid parameter.
                 Default: False
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -478,9 +460,9 @@ class PodcastIndex:
             payload["desc"] = desc
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def trendingPodcasts(
+    async def trendingPodcasts(
         self, max=10, since=None, lang=None, categories=None, not_categories=None
     ):
         """
@@ -513,9 +495,9 @@ class PodcastIndex:
             payload["notcat"] = ",".join(str(i) for i in not_categories)
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def addByItunesId(self, itunesId):
+    async def addByItunesId(self, itunesId):
         """
         Request a podcast be added to the index based on itunesId.
 
@@ -523,8 +505,7 @@ class PodcastIndex:
             itunesId (string or integer): Itunes ID for the feed.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -539,9 +520,9 @@ class PodcastIndex:
         }
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)
 
-    def pubNotifyUpdate(self, id):
+    async def pubNotifyUpdate(self, id):
         """
         Request a podcast be updated.
 
@@ -549,8 +530,7 @@ class PodcastIndex:
             id (string or integer): ID of the podcast to update.
 
         Raises:
-            requests.exceptions.HTTPError: When the status code is not OK.
-            requests.exceptions.ReadTimeout: When the request times out.
+            aiohttp.ClientResponseError: When the status code is not OK.
 
         Returns:
             Dict: API response
@@ -565,4 +545,4 @@ class PodcastIndex:
         }
 
         # Call Api for result
-        return self._make_request_get_result_helper(url, payload)
+        return await self._make_request_get_result_helper(url, payload)

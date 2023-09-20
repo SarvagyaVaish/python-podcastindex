@@ -1,4 +1,5 @@
 requests
+aiohttp
 
 # For development
 black;python_version>='3.6'
