@@ -1,15 +1,16 @@
 import logging
 
-import podcastindex
 import pytest
 import requests
+
+import podcastindex
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
-feedUrl = "http://feed.thisamericanlife.org/talpodcast"
-feedId = 522613
-itunesId = 201671138
+feedUrl = "https://lexfridman.com/feed/podcast/"
+feedId = 745287
+itunesId = 1434243584
 badItunesId = "abcdefg1234"
 
 
@@ -77,4 +78,19 @@ def test_episode_lookup_by_id():
     latest_episode_id = results["items"][0]["id"]
 
     results = index.episodeById(latest_episode_id)
-    assert results["episode"]["id"] == latest_episode_id, "Episode fetched by ID should match ID used in query"
+    assert (
+        results["episode"]["id"] == latest_episode_id
+    ), "Episode fetched by ID should match ID used in query"
+
+
+def test_episode_lookup_by_guid():
+    config = podcastindex.get_config_from_env()
+    index = podcastindex.init(config)
+
+    results = index.episodesByFeedUrl(feedUrl)
+    latest_episode_guid = results["items"][0]["guid"]
+
+    results = index.episodeByGuid(latest_episode_guid, feedUrl)
+    assert (
+        results["episode"]["guid"] == latest_episode_guid
+    ), "Episode fetched by GUID should match GUID used in query"
