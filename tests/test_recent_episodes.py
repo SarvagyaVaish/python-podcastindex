@@ -2,6 +2,7 @@ import logging
 import time
 
 import podcastindex
+import pytest
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -41,12 +42,12 @@ def _log_results(context, results):
 #             more_recent_timestamp >= next_item_timestamp
 #         ), "Recent episodes should be returned in reverse chronological order"
 
-
-def test_recent_episodes_max():
+@pytest.mark.asyncio
+async def test_recent_episodes_max():
     config = podcastindex.get_config_from_env()
     index = podcastindex.init(config)
 
-    results = index.recentEpisodes(max=15)
+    results = await index.recentEpisodes(max=15)
     assert len(results["items"]) == 15, "By default we expect to get back 10 results"
 
 

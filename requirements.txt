@@ -13,3 +13,4 @@ wheel
 codecov
 coverage
 pytest
+pytest-asyncio

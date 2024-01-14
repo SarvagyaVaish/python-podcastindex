@@ -35,8 +35,8 @@ index = podcastindex.init(config)
 ### Search
 
 ```python
-result = index.search("This American Life")
-result = index.search("This American Life", clean=True)
+result = await index.search("This American Life")
+result = await index.search("This American Life", clean=True)
 ```
 
 <details>
@@ -93,9 +93,9 @@ result = index.search("This American Life", clean=True)
 ### Podcasts
 
 ```python
-results = index.podcastByFeedId(522613)
-results = index.podcastByFeedUrl("http://feed.thisamericanlife.org/talpodcast")
-results = index.podcastByItunesId(201671138)
+results = await index.podcastByFeedId(522613)
+results = await index.podcastByFeedUrl("http://feed.thisamericanlife.org/talpodcast")
+results = await index.podcastByItunesId(201671138)
 ```
 
 <details>
@@ -142,12 +142,12 @@ results = index.podcastByItunesId(201671138)
 ### Episodes of a podcast
 
 ```python
-results = index.episodesByFeedId(522613)
-results = index.episodesByFeedUrl("http://feed.thisamericanlife.org/talpodcast")
-results = index.episodesByItunesId(201671138)
+results = await index.episodesByFeedId(522613)
+results = await index.episodesByFeedUrl("http://feed.thisamericanlife.org/talpodcast")
+results = await index.episodesByItunesId(201671138)
 
-results = index.episodesByFeedId(522613, since=-525600)  # in the last year
-results = index.episodesByFeedId(522613, since=1577836800)  # Jan 1st 2020
+results = await index.episodesByFeedId(522613, since=-525600)  # in the last year
+results = await index.episodesByFeedId(522613, since=1577836800)  # Jan 1st 2020
 ```
 
 <details>
@@ -195,7 +195,7 @@ results = index.episodesByFeedId(522613, since=1577836800)  # Jan 1st 2020
 ### Episode by ID
 
 ```python
-results = index.episodeById(1270106072)
+results = await index.episodeById(1270106072)
 ```
 
 <details>
@@ -240,7 +240,7 @@ results = index.episodeById(1270106072)
 ### Recent episodes
 
 ```python
-results = index.recentEpisodes(max=5, excluding="trump", before_episode_id=1270106072)
+results = await index.recentEpisodes(max=5, excluding="trump", before_episode_id=1270106072)
 ```
 
 <details>
