@@ -190,7 +190,9 @@ class PodcastIndex:
         # Call Api for result
         return await self._make_request_get_result_helper(url, payload)
 
+
     async def episodesByFeedUrl(self, feedUrl, since=None, max_results=10, fulltext=False):
+
         """
         Lookup episodes by feedUrl, returned in reverse chronological order.
 
@@ -254,7 +256,7 @@ class PodcastIndex:
 
         # Call Api for result
         return await self._make_request_get_result_helper(url, payload)
-
+      
     async def episodesByItunesId(
         self, itunesId, since=None, max_results=10, fulltext=False, enclosure=None
     ):
@@ -268,6 +270,7 @@ class PodcastIndex:
             max_results (integer): Maximum number of results to return. Default: 10
             fulltext (bool): Return full text in the text fields. Default: False
             enclosure (string): The URL for the episode enclosure to get the information for.
+
 
         Raises:
             aiohttp.ClientResponseError: When the status code is not OK.
@@ -294,7 +297,9 @@ class PodcastIndex:
         # Call Api for result
         return await self._make_request_get_result_helper(url, payload)
 
+      
     async def episodeById(self, id, fulltext=False):
+
         """
         Lookup episode by id internal to podcast index.
 
@@ -319,6 +324,7 @@ class PodcastIndex:
         # Call Api for result
         return await self._make_request_get_result_helper(url, payload)
 
+      
     async def episodesByPerson(self, query, clean=False, fulltext=False):
         """
         Returns all of the episodes where the specified person is mentioned.
