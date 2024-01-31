@@ -93,4 +93,18 @@ def test_episode_lookup_by_guid():
     results = index.episodeByGuid(latest_episode_guid, feedUrl)
     assert (
         results["episode"]["guid"] == latest_episode_guid
-    ), "Episode fetched by GUID should match GUID used in query"
+    ), "Episode fetched by GUID and FEEDURL should match GUID used in query"
+
+    results = index.episodeByGuid(
+        latest_episode_guid, feedid=results["episode"]["feedId"]
+    )
+    assert (
+        results["episode"]["guid"] == latest_episode_guid
+    ), "Episode fetched by GUID and FEEDID should match GUID used in query"
+
+    results = index.episodeByGuid(
+        latest_episode_guid, podcastguid=results["episode"]["podcastGuid"]
+    )
+    assert (
+        results["episode"]["guid"] == latest_episode_guid
+    ), "Episode fetched by GUID and PODCASTGUID should match GUID used in query"
