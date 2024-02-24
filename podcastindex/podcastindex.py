@@ -333,6 +333,52 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
+    def episodeByGuid(
+        self, guid, feedurl=None, feedid=None, podcastguid=None, fulltext=False
+    ):
+        """
+        Lookup episode by guid.
+
+        Args:
+            guid (string): Episode GUID.
+            feedurl (string): The feed's url.
+            feedid (string or integer): Podcast index internal ID.
+            podcastguid (string): The GUID of the podcast to search within.
+            fulltext (bool): Return full text in the text fields. Default: False
+
+            *guid and at least one of feedurl or feedid must be specified.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        if not guid:
+            raise ValueError("guid must not be None or empty")
+        if not (feedurl or feedid or podcastguid):
+            raise ValueError(
+                "At least one of feedurl or feedid or podcastguid must not be None or empty"
+            )
+
+        # Setup request
+        url = self.base_url + "/episodes/byguid"
+
+        # Setup payload
+        payload = {"guid": guid}
+        if feedurl:
+            payload["feedurl"] = feedurl
+        if feedid:
+            payload["feedid"] = feedid
+        if podcastguid:
+            payload["podcastguid"] = podcastguid
+        if fulltext:
+            payload["fulltext"] = True
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
     def episodesByPerson(self, query, clean=False, fulltext=False):
         """
         Returns all of the episodes where the specified person is mentioned.
