@@ -230,6 +230,29 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
+    def podcastByGuid(self, guid):
+        """
+        Lookup a podcast by guid.
+
+        Args:
+            guid (string): Podcast index guid.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/podcasts/byguid"
+
+        # Setup payload
+        payload = {"guid": guid}
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
     def episodesByFeedId(
         self, feedId, since=None, max_results=10, fulltext=False, enclosure=None
     ):
