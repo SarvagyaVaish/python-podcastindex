@@ -330,6 +330,42 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
+    def episodesByPodcastGuid(
+        self, podcastGuid, since=None, max_results=10, fulltext=False, enclosure=None
+    ):
+        """
+        Lookup episodes by podcast GUID, returned in reverse chronological order.
+
+        Args:
+            podcastGuid (string): Podcast index guid.
+            since (integer): Unix timestamp, or a negative integer that represents a number of seconds prior to right
+                             now. The search will start from that time and only return feeds updated since then.
+            max_results (integer): Maximum number of results to return. Default: 10
+            fulltext (bool): Return full text in the text fields. Default: False
+            enclosure (string): The URL for the episode enclosure to get the information for.
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/episodes/bypodcastguid"
+
+        # Setup payload
+        payload = {"guid": podcastGuid, "max": max_results}
+        if since:
+            payload["since"] = since
+        if fulltext:
+            payload["fulltext"] = True
+        if enclosure:
+            payload["enclosure"] = enclosure
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
     def episodeById(self, id, fulltext=False):
         """
         Lookup episode by id internal to podcast index.

@@ -12,6 +12,7 @@ feedUrl = "https://lexfridman.com/feed/podcast/"
 feedId = 745287
 itunesId = 1434243584
 badItunesId = "abcdefg1234"
+podcastGuid = "7eeae9d1-141e-5133-9e8f-6c1da695e40c"
 
 
 def test_episode_lookup_by_feedid():
@@ -60,6 +61,16 @@ def test_episode_lookup_by_itunesid():
     assert (
         results["items"][0]["feedItunesId"] == itunesId
     ), "Episodes found do not belong to the Itunes ID used in the query"
+
+def test_episode_lookup_by_podcastguid():
+    config = podcastindex.get_config_from_env()
+    index = podcastindex.init(config)
+
+    results = index.episodesByPodcastGuid(podcastGuid)
+    assert len(results["items"]) > 0, "No episodes found when looking up episodes by podcast GUID."
+    assert (
+        results["items"][0]["feedItunesId"] == itunesId
+    ), "Episodes found do not belong to the feed URL used in the query"
 
 
 def test_erroneous_episode_lookup_by_itunesid():
