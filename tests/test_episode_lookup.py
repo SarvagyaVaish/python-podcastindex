@@ -70,7 +70,7 @@ def test_episode_lookup_by_podcastguid():
     assert len(results["items"]) > 0, "No episodes found when looking up episodes by podcast GUID."
     assert (
         results["items"][0]["feedItunesId"] == itunesId
-    ), "Episodes found do not belong to the feed URL used in the query"
+    ), "Episodes found do not belong to the podcast GUID used in the query"
 
 
 def test_erroneous_episode_lookup_by_itunesid():
