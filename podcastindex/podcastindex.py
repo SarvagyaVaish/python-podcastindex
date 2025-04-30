@@ -467,6 +467,35 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
+    def randomEpisodes(self, max=None, fulltext=False):
+        """
+        Fetch a random batch of episodes, in no specific order.
+
+        Args:
+            max (int): Maximum number of episodes to return. Default: 1
+            fulltext (bool): Return full text in the text fields. Default: False
+
+        Raises:
+            requests.exceptions.HTTPError: When the status code is not OK.
+            requests.exceptions.ReadTimeout: When the request times out.
+
+        Returns:
+            Dict: API response
+        """
+        # Setup request
+        url = self.base_url + "/episodes/random"
+
+        # Setup payload
+        payload = {"pretty": 1}
+        if max:
+            payload["max"] = max
+        if fulltext:
+            payload["fulltext"] = True
+
+        # Call Api for result
+        return self._make_request_get_result_helper(url, payload)
+
+
     def recentEpisodes(
         self, max=None, excluding=None, before_episode_id=None, fulltext=False
     ):
