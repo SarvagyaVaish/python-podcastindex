@@ -467,12 +467,17 @@ class PodcastIndex:
         # Call Api for result
         return self._make_request_get_result_helper(url, payload)
 
-    def randomEpisodes(self, max=None, fulltext=False):
+    def randomEpisodes(self, max=None, lang=None, cat=None, notcat=None, fulltext=False):
         """
         Fetch a random batch of episodes, in no specific order.
+        See https://podcastindex-org.github.io/docs-api/#get-/episodes/random
+        for more information and examples on how to specify the arguments below.
 
         Args:
             max (int): Maximum number of episodes to return. Default: 1
+            lang (str): Language code to filter by.
+            cat (str): Specify that you ONLY want episodes with these categories in the results.
+            notcat (str): Specify categories of episodes to NOT show in the results.
             fulltext (bool): Return full text in the text fields. Default: False
 
         Raises:
@@ -489,6 +494,12 @@ class PodcastIndex:
         payload = {"pretty": 1}
         if max:
             payload["max"] = max
+        if lang:
+            payload["lang"] = lang
+        if cat:
+            payload["cat"] = cat
+        if notcat:
+            payload["notcat"] = notcat
         if fulltext:
             payload["fulltext"] = True
 
