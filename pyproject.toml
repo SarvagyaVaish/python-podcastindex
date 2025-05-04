@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-podcastindex"
+version = "1.15.0"
+authors = [
+    { name="Sarvagya (Survy) Vaish", email="sarvagya.vaish7@gmail.com" },
+]
+description = "A python wrapper for the Podcast Index API (podcastindex.org)."
+readme = "README.md"
+requires-python = ">=2.7"
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+]
+dependencies = [
+    "requests",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/SarvagyaVaish/python-podcastindex"
+"Bug Tracker" = "https://github.com/SarvagyaVaish/python-podcastindex/issues"
+
+[project.scripts]
+realpython = "podcastindex.__main__:main"
