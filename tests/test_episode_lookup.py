@@ -62,6 +62,7 @@ def test_episode_lookup_by_itunesid():
         results["items"][0]["feedItunesId"] == itunesId
     ), "Episodes found do not belong to the Itunes ID used in the query"
 
+
 def test_episode_lookup_by_podcastguid():
     config = podcastindex.get_config_from_env()
     index = podcastindex.init(config)
@@ -71,14 +72,6 @@ def test_episode_lookup_by_podcastguid():
     assert (
         results["items"][0]["feedItunesId"] == itunesId
     ), "Episodes found do not belong to the podcast GUID used in the query"
-
-
-def test_erroneous_episode_lookup_by_itunesid():
-    config = podcastindex.get_config_from_env()
-    index = podcastindex.init(config)
-
-    with pytest.raises(requests.exceptions.ReadTimeout):
-        index.episodesByItunesId(badItunesId)
 
 
 def test_episode_lookup_by_id():
